@@ -8,7 +8,7 @@ const profileData = {
     followers: 847,
     connections: 312,
     isOwnProfile: true,
-    avatar: "assets/avatar.jpg",
+    avatar: "assets/avatar.png",
     banner: "assets/banner.jpeg",
     openToWork: true,
     degree: "2nd",
@@ -54,6 +54,44 @@ I'm currently seeking full-time Data Analyst roles in the GTA where I can contri
       url: "#"
     }
   ],
+
+  activity: {
+    posts: [
+      {
+        timeAgo: "2w",
+        content: "Just wrapped up my Business Analytics co-op at Vantage Retail Analytics — and I have so much to reflect on. Here's what real-world data work actually looks like vs. what I expected in class...",
+        imageEmoji: "📊",
+        imageBg: "#e8f0fe",
+        reactions: 34,
+        comments: 8
+      },
+      {
+        timeAgo: "1mo",
+        content: "SQL tip of the week: Window Functions. If you're analyzing trends, rankings, or running totals — window functions will save your life. Here's a breakdown with real examples...",
+        imageEmoji: "💻",
+        imageBg: "#f0fdf4",
+        reactions: 51,
+        comments: 12
+      }
+    ],
+    comments: [
+      {
+        timeAgo: "1w",
+        action: "commented on a post",
+        text: "This SQL window function explanation is exactly what I needed when I was starting out with CTEs. Sharing this with my entire cohort at Conestoga!"
+      },
+      {
+        timeAgo: "2w",
+        action: "commented on a post",
+        text: "Congrats on the Power BI certification! It's such a powerful tool once you get past the DAX learning curve 😄 The calculated columns vs. measures distinction tripped me up for weeks."
+      },
+      {
+        timeAgo: "3w",
+        action: "commented on a post",
+        text: "Such a clean breakdown of star vs. snowflake schema. Bookmarked this for my data warehousing assignment — exactly the kind of real-world context that makes the theory click."
+      }
+    ]
+  },
 
   experience: [
     {

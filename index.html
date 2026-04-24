@@ -255,6 +255,85 @@
     }
 
     /* ════════════════════════════════════════════
+       ACTIVITY SECTION
+    ════════════════════════════════════════════ */
+
+    function ActivitySection({ data, header, isOwnProfile }) {
+      const [activeTab, setActiveTab] = useState('Posts');
+      const tabs = ['Posts', 'Comments', 'Videos', 'Images'];
+      const authorName  = header.name;
+      const authorTitle = header.headline.split('|')[0].trim();
+
+      return (
+        <div className="card">
+          <div className="card-body">
+            <SectionHeaderRow title="Activity" isOwnProfile={false} />
+            <p className="activity-followers">{header.followers.toLocaleString()} followers</p>
+
+            <div className="activity-tabs">
+              {tabs.map(tab => (
+                <button
+                  key={tab}
+                  className={`activity-tab${activeTab === tab ? ' active' : ''}`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+
+            {activeTab === 'Posts' && (
+              <div className="activity-posts-grid">
+                {data.posts.map((post, i) => (
+                  <div key={i} className="activity-post-card">
+                    <div className="activity-post-header">
+                      <InitialsAvatar initials="PN" color="#0a66c2" size={32} shape="circle" />
+                      <div className="activity-post-author-block">
+                        <div className="activity-post-author-name">{authorName}</div>
+                        <div className="activity-post-author-meta">{authorTitle}</div>
+                      </div>
+                      <span className="activity-post-time">{post.timeAgo}</span>
+                    </div>
+                    <p className="activity-post-text">{post.content}</p>
+                    <div className="activity-post-image" style={{ background: post.imageBg }}>
+                      {post.imageEmoji}
+                    </div>
+                    <div className="activity-post-reactions">
+                      <span>❤️ {post.reactions}</span>
+                      <span>💬 {post.comments}</span>
+                      <span className="reaction-share">↗</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'Comments' && (
+              <div className="activity-comments-list">
+                {data.comments.map((c, i) => (
+                  <div key={i} className="activity-comment-item">
+                    <p className="activity-comment-meta">
+                      <strong>{authorName}</strong> {c.action} · {c.timeAgo}
+                    </p>
+                    <p className="activity-comment-text">{c.text}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {(activeTab === 'Videos' || activeTab === 'Images') && (
+              <p className="activity-empty">No {activeTab.toLowerCase()} to show yet.</p>
+            )}
+
+            <div className="section-footer">
+              <button className="section-footer-btn">Show all activity →</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
        EXPERIENCE SECTION
     ════════════════════════════════════════════ */
 
@@ -697,7 +776,7 @@
             <div className="analytics-title" style={{ color: '#057642' }}>Open to Work</div>
             <div className="analytics-desc">
               Data Analyst, Business Analyst, Junior BI Developer roles<br />
-              <strong>Mississauga, ON · Remote · Hybrid</strong>
+              <strong>Toronto, ON · Remote · Hybrid</strong>
             </div>
             <button className="btn btn-outline" style={{ marginTop: '8px', fontSize: '13px', padding: '4px 14px' }}>
               Show details
@@ -732,6 +811,11 @@
                 data={profileData.featured}
                 isOwnProfile={isOwnProfile}
                 onSectionClick={null}
+              />
+              <ActivitySection
+                data={profileData.activity}
+                header={profileData.header}
+                isOwnProfile={isOwnProfile}
               />
               <ExperienceSection
                 data={profileData.experience}
