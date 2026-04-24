@@ -320,8 +320,7 @@ Beyond the technical output, Priya stood out for her organizational skills and p
 
   languages: [
     { language: "English", proficiency: "Full Professional Proficiency" },
-    { language: "Hindi", proficiency: "Native or Bilingual Proficiency" },
-    { language: "Malayalam", proficiency: "Native or Bilingual Proficiency" }
+    { language: "French", proficiency: "Professional Working Proficiency" }
   ],
 
   interests: [

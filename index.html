@@ -9,6 +9,8 @@
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Guide data (phase 2) -->
+  <script src="guideData.js"></script>
   <!-- Profile data -->
   <script src="profileData.js"></script>
 </head>
@@ -16,7 +18,108 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState } = React;
+    const { useState, useEffect } = React;
+
+    /* ════════════════════════════════════════════
+       GUIDE BADGE  (the ? circle)
+    ════════════════════════════════════════════ */
+    function GuideBadge({ sectionKey, onOpen, className = '' }) {
+      return (
+        <button
+          className={`guide-badge ${className}`}
+          title="View tips"
+          onClick={e => { e.stopPropagation(); onOpen(sectionKey); }}
+        >
+          ?
+        </button>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       GUIDE DRAWER
+    ════════════════════════════════════════════ */
+    function renderBlock(block, i) {
+      switch (block.type) {
+        case 'heading':
+          return <p key={i} className="guide-block-heading">{block.text}</p>;
+        case 'subheading':
+          return <p key={i} className="guide-block-subheading">{block.text}</p>;
+        case 'text':
+          return <p key={i} className="guide-block-text">{block.text}</p>;
+        case 'bullet-list':
+          return (
+            <ul key={i} className="guide-list">
+              {block.items.map((it, j) => <li key={j}>{it}</li>)}
+            </ul>
+          );
+        case 'do-list':
+          return (
+            <ul key={i} className="guide-list guide-list-do">
+              {block.items.map((it, j) => <li key={j}>{it}</li>)}
+            </ul>
+          );
+        case 'dont-list':
+          return (
+            <ul key={i} className="guide-list guide-list-dont">
+              {block.items.map((it, j) => <li key={j}>{it}</li>)}
+            </ul>
+          );
+        case 'numbered-list':
+          return (
+            <ol key={i} className="guide-numbered-list">
+              {block.items.map((it, j) => <li key={j}>{it}</li>)}
+            </ol>
+          );
+        case 'formula':
+          return <div key={i} className="guide-formula">{block.text}</div>;
+        case 'code-block':
+          return <pre key={i} className="guide-code-block">{block.text}</pre>;
+        case 'example-list':
+          return (
+            <ul key={i} className="guide-example-list">
+              {block.items.map((it, j) => <li key={j}>{it}</li>)}
+            </ul>
+          );
+        case 'pro-tip':
+          return (
+            <div key={i} className="guide-pro-tip">
+              <span className="guide-pro-tip-icon">💡</span>
+              <p className="guide-pro-tip-text"><strong>Pro Tip:</strong> {block.text}</p>
+            </div>
+          );
+        default:
+          return null;
+      }
+    }
+
+    function GuideDrawer({ sectionKey, onClose }) {
+      useEffect(() => {
+        const onKey = e => { if (e.key === 'Escape') onClose(); };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+      }, [onClose]);
+
+      if (!sectionKey) return null;
+      const guide = guideData[sectionKey];
+      if (!guide) return null;
+
+      return (
+        <>
+          <div className="guide-overlay" onClick={onClose} />
+          <div className="guide-drawer">
+            <div className="guide-drawer-accent" style={{ background: guide.accentColor }} />
+            <div className="guide-drawer-header">
+              <span className="guide-drawer-icon">{guide.icon}</span>
+              <h2 className="guide-drawer-title">{guide.title}</h2>
+              <button className="guide-drawer-close" onClick={onClose}>✕</button>
+            </div>
+            <div className="guide-drawer-body">
+              {guide.blocks.map((block, i) => renderBlock(block, i))}
+            </div>
+          </div>
+        </>
+      );
+    }
 
     /* ════════════════════════════════════════════
        HELPER COMPONENTS
@@ -53,11 +156,13 @@
       );
     }
 
-    function SectionHeaderRow({ title, isOwnProfile }) {
+    function SectionHeaderRow({ title, guideKey, onGuideOpen }) {
       return (
         <div className="section-header-row">
           <h2 className="section-title">{title}</h2>
-          {isOwnProfile && <button className="icon-btn" title="Edit">✏️</button>}
+          {guideKey && onGuideOpen && (
+            <GuideBadge sectionKey={guideKey} onOpen={onGuideOpen} />
+          )}
         </div>
       );
     }
@@ -66,10 +171,10 @@
        PROFILE HEADER
     ════════════════════════════════════════════ */
 
-    function ProfileHeader({ data, isOwnProfile }) {
+    function ProfileHeader({ data, isOwnProfile, onGuideOpen }) {
       return (
         <div className="profile-header-card">
-          {/* Banner */}
+          {/* Banner — badge floats top-right */}
           <div className="banner-container">
             <img
               className="banner-img"
@@ -77,11 +182,11 @@
               alt="Profile banner"
               onError={e => { e.target.style.display = 'none'; }}
             />
-            {isOwnProfile && <button className="banner-edit-btn" title="Edit banner">✏️</button>}
+            <GuideBadge sectionKey="banner" onOpen={onGuideOpen} className="guide-badge-float banner-guide-badge" />
           </div>
 
           <div className="profile-header-body">
-            {/* Avatar */}
+            {/* Avatar — badge floats on corner */}
             <div className="avatar-wrapper">
               <div className={`avatar-ring ${data.openToWork ? 'open-to-work' : ''}`}>
                 <div className="avatar-circle" style={{ background: '#0a66c2' }}>
@@ -92,6 +197,7 @@
                   />
                 </div>
               </div>
+              <GuideBadge sectionKey="photo" onOpen={onGuideOpen} className="guide-badge-float photo-guide-badge" />
             </div>
 
             {/* Name + pronouns + degree */}
@@ -101,13 +207,19 @@
               <span className="degree-badge">{data.degree}</span>
             </div>
 
-            {/* Headline */}
-            <p className="profile-headline">{data.headline}</p>
+            {/* Headline + badge inline */}
+            <div className="guide-inline-row" style={{ marginBottom: '4px' }}>
+              <p className="profile-headline" style={{ margin: 0 }}>{data.headline}</p>
+              <GuideBadge sectionKey="headline" onOpen={onGuideOpen} />
+            </div>
 
-            {/* Location */}
-            <p className="profile-location">
-              {data.location} · <span className="profile-contact-link">{data.contactInfo}</span>
-            </p>
+            {/* Location + badge inline */}
+            <div className="guide-inline-row" style={{ marginBottom: '4px' }}>
+              <p className="profile-location" style={{ margin: 0 }}>
+                {data.location} · <span className="profile-contact-link">{data.contactInfo}</span>
+              </p>
+              <GuideBadge sectionKey="location" onOpen={onGuideOpen} />
+            </div>
 
             {/* Stats */}
             <div className="profile-stats">
@@ -135,11 +247,12 @@
               </div>
             )}
 
-            {/* Action buttons */}
+            {/* Action buttons — OTW badge sits right after the Open to button */}
             <div className="action-buttons">
               {isOwnProfile ? (
                 <>
                   <button className="btn btn-green">Open to</button>
+                  <GuideBadge sectionKey="openToWork" onOpen={onGuideOpen} />
                   <button className="btn btn-outline">Add section</button>
                   <button className="btn btn-ghost">Enhance profile</button>
                   <button className="btn btn-ghost">Resources ▾</button>
@@ -188,7 +301,7 @@
        ABOUT SECTION
     ════════════════════════════════════════════ */
 
-    function AboutSection({ data, isOwnProfile, onSectionClick }) {
+    function AboutSection({ data, isOwnProfile, onGuideOpen }) {
       const [expanded, setExpanded] = useState(false);
       const paragraphs = data.text.trim().split('\n\n');
       const previewText = paragraphs[0];
@@ -197,7 +310,7 @@
       return (
         <div className="card">
           <div className="card-body">
-            <SectionHeaderRow title="About" isOwnProfile={isOwnProfile} />
+            <SectionHeaderRow title="About" guideKey="about" onGuideOpen={onGuideOpen} />
 
             {expanded ? (
               <div className="about-text">
@@ -232,11 +345,11 @@
        FEATURED SECTION
     ════════════════════════════════════════════ */
 
-    function FeaturedSection({ data, isOwnProfile, onSectionClick }) {
+    function FeaturedSection({ data, isOwnProfile, onGuideOpen }) {
       return (
         <div className="card">
           <div className="card-body">
-            <SectionHeaderRow title="Featured" isOwnProfile={isOwnProfile} />
+            <SectionHeaderRow title="Featured" guideKey="featured" onGuideOpen={onGuideOpen} />
             <div className="featured-scroll">
               {data.map((item, i) => (
                 <div key={i} className="featured-card" onClick={() => window.open(item.url, '_blank')}>
@@ -337,11 +450,11 @@
        EXPERIENCE SECTION
     ════════════════════════════════════════════ */
 
-    function ExperienceSection({ data, isOwnProfile, onSectionClick }) {
+    function ExperienceSection({ data, isOwnProfile, onGuideOpen }) {
       return (
         <div className="card">
           <div className="card-body">
-            <SectionHeaderRow title="Experience" isOwnProfile={isOwnProfile} />
+            <SectionHeaderRow title="Experience" guideKey="experience" onGuideOpen={onGuideOpen} />
             <div className="experience-list">
               {data.map((exp, i) => (
                 <div key={i} className="experience-item">
@@ -376,11 +489,11 @@
        EDUCATION SECTION
     ════════════════════════════════════════════ */
 
-    function EducationSection({ data, isOwnProfile, onSectionClick }) {
+    function EducationSection({ data, isOwnProfile, onGuideOpen }) {
       return (
         <div className="card">
           <div className="card-body">
-            <SectionHeaderRow title="Education" isOwnProfile={isOwnProfile} />
+            <SectionHeaderRow title="Education" guideKey="education" onGuideOpen={onGuideOpen} />
             <div className="education-list">
               {data.map((edu, i) => (
                 <div key={i} className="education-item">
@@ -417,11 +530,11 @@
        CERTIFICATIONS SECTION
     ════════════════════════════════════════════ */
 
-    function CertificationsSection({ data, isOwnProfile, onSectionClick }) {
+    function CertificationsSection({ data, isOwnProfile, onGuideOpen }) {
       return (
         <div className="card">
           <div className="card-body">
-            <SectionHeaderRow title="Licenses & Certifications" isOwnProfile={isOwnProfile} />
+            <SectionHeaderRow title="Licenses & Certifications" guideKey="certifications" onGuideOpen={onGuideOpen} />
             <div className="cert-list">
               {data.map((cert, i) => (
                 <div key={i} className="cert-item">
@@ -498,19 +611,11 @@
       );
     }
 
-    function ProjectsSection({ data, isOwnProfile, onSectionClick }) {
+    function ProjectsSection({ data, isOwnProfile, onGuideOpen }) {
       return (
         <div className="card">
           <div className="card-body">
-            <div className="section-header-row">
-              <h2 className="section-title">Projects</h2>
-              {isOwnProfile && (
-                <div style={{ display: 'flex', gap: '4px' }}>
-                  <button className="icon-btn" title="Add">＋</button>
-                  <button className="icon-btn" title="Edit">✏️</button>
-                </div>
-              )}
-            </div>
+            <SectionHeaderRow title="Projects" guideKey="projects" onGuideOpen={onGuideOpen} />
             <div className="project-list">
               {data.map((project, i) => (
                 <ProjectItem key={i} project={project} />
@@ -528,11 +633,11 @@
        VOLUNTEERING SECTION
     ════════════════════════════════════════════ */
 
-    function VolunteeringSection({ data, isOwnProfile, onSectionClick }) {
+    function VolunteeringSection({ data, isOwnProfile, onGuideOpen }) {
       return (
         <div className="card">
           <div className="card-body">
-            <SectionHeaderRow title="Volunteering" isOwnProfile={isOwnProfile} />
+            <SectionHeaderRow title="Volunteering" guideKey="volunteering" onGuideOpen={onGuideOpen} />
             <div className="vol-list">
               {data.map((vol, i) => (
                 <div key={i} className="vol-item">
@@ -561,7 +666,7 @@
        SKILLS SECTION
     ════════════════════════════════════════════ */
 
-    function SkillsSection({ data, isOwnProfile, onSectionClick }) {
+    function SkillsSection({ data, isOwnProfile, onGuideOpen }) {
       const [showAll, setShowAll] = useState(false);
 
       const categories = [...new Set(data.map(s => s.category))];
@@ -578,7 +683,7 @@
       return (
         <div className="card">
           <div className="card-body">
-            <SectionHeaderRow title="Skills" isOwnProfile={isOwnProfile} />
+            <SectionHeaderRow title="Skills" guideKey="skills" onGuideOpen={onGuideOpen} />
             {Object.entries(grouped).map(([cat, skills]) => (
               <div key={cat} className="skills-category">
                 <div className="skills-category-title">{cat}</div>
@@ -635,14 +740,14 @@
       );
     }
 
-    function RecommendationsSection({ data, isOwnProfile, onSectionClick }) {
+    function RecommendationsSection({ data, isOwnProfile, onGuideOpen }) {
       const [activeTab, setActiveTab] = useState('received');
       const list = activeTab === 'received' ? data.received : data.given;
 
       return (
         <div className="card">
           <div className="card-body">
-            <SectionHeaderRow title="Recommendations" isOwnProfile={isOwnProfile} />
+            <SectionHeaderRow title="Recommendations" guideKey="recommendations" onGuideOpen={onGuideOpen} />
             <div className="rec-tabs">
               <button
                 className={`rec-tab ${activeTab === 'received' ? 'active' : ''}`}
@@ -674,11 +779,11 @@
        LANGUAGES SECTION
     ════════════════════════════════════════════ */
 
-    function LanguagesSection({ data, isOwnProfile, onSectionClick }) {
+    function LanguagesSection({ data, isOwnProfile, onGuideOpen }) {
       return (
         <div className="card">
           <div className="card-body">
-            <SectionHeaderRow title="Languages" isOwnProfile={isOwnProfile} />
+            <SectionHeaderRow title="Languages" guideKey="languages" onGuideOpen={onGuideOpen} />
             <div className="languages-list">
               {data.map((lang, i) => (
                 <div key={i} className="language-item">
@@ -699,11 +804,11 @@
        INTERESTS SECTION
     ════════════════════════════════════════════ */
 
-    function InterestsSection({ data, isOwnProfile, onSectionClick }) {
+    function InterestsSection({ data, isOwnProfile, onGuideOpen }) {
       return (
         <div className="card">
           <div className="card-body">
-            <SectionHeaderRow title="Interests" isOwnProfile={isOwnProfile} />
+            <SectionHeaderRow title="Interests" guideKey="interests" onGuideOpen={onGuideOpen} />
             <div className="interests-tabs">
               {['Companies','Groups','Newsletters','Schools'].map((tab, i) => (
                 <button key={tab} className={`interests-tab${i === 0 ? ' active' : ''}`}>{tab}</button>
@@ -733,7 +838,7 @@
        SIDEBAR COMPONENTS
     ════════════════════════════════════════════ */
 
-    function ProfileSidebar({ header }) {
+    function ProfileSidebar({ header, onGuideOpen }) {
       return (
         <>
           {/* Profile language card */}
@@ -741,6 +846,19 @@
             <div className="sidebar-card-title">Profile language</div>
             <div className="sidebar-row">
               <span className="sidebar-row-label">English</span>
+            </div>
+          </div>
+
+          {/* Public profile & URL card */}
+          <div className="sidebar-card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+              <div className="sidebar-card-title" style={{ margin: 0 }}>Public profile &amp; URL</div>
+              {onGuideOpen && <GuideBadge sectionKey="customUrl" onOpen={onGuideOpen} />}
+            </div>
+            <div className="sidebar-row">
+              <span style={{ fontSize: '13px', color: 'var(--blue)' }}>
+                linkedin.com/in/{(header.name || '').toLowerCase().replace(/\s+/g, '')}
+              </span>
             </div>
           </div>
 
@@ -792,11 +910,15 @@
 
     function App() {
       const isOwnProfile = profileData.header.isOwnProfile;
+      const [activeGuide, setActiveGuide] = useState(null);
+      const openGuide  = key => setActiveGuide(key);
+      const closeGuide = ()  => setActiveGuide(null);
 
       return (
         <div className="linkedin-app">
+          <GuideDrawer sectionKey={activeGuide} onClose={closeGuide} />
           {/* Full-width profile header */}
-          <ProfileHeader data={profileData.header} isOwnProfile={isOwnProfile} />
+          <ProfileHeader data={profileData.header} isOwnProfile={isOwnProfile} onGuideOpen={openGuide} />
 
           {/* Two-column layout */}
           <div className="profile-layout">
@@ -805,12 +927,12 @@
               <AboutSection
                 data={profileData.about}
                 isOwnProfile={isOwnProfile}
-                onSectionClick={null}
+                onGuideOpen={openGuide}
               />
               <FeaturedSection
                 data={profileData.featured}
                 isOwnProfile={isOwnProfile}
-                onSectionClick={null}
+                onGuideOpen={openGuide}
               />
               <ActivitySection
                 data={profileData.activity}
@@ -820,53 +942,53 @@
               <ExperienceSection
                 data={profileData.experience}
                 isOwnProfile={isOwnProfile}
-                onSectionClick={null}
+                onGuideOpen={openGuide}
               />
               <EducationSection
                 data={profileData.education}
                 isOwnProfile={isOwnProfile}
-                onSectionClick={null}
+                onGuideOpen={openGuide}
               />
               <CertificationsSection
                 data={profileData.certifications}
                 isOwnProfile={isOwnProfile}
-                onSectionClick={null}
+                onGuideOpen={openGuide}
               />
               <ProjectsSection
                 data={profileData.projects}
                 isOwnProfile={isOwnProfile}
-                onSectionClick={null}
+                onGuideOpen={openGuide}
               />
               <VolunteeringSection
                 data={profileData.volunteering}
                 isOwnProfile={isOwnProfile}
-                onSectionClick={null}
+                onGuideOpen={openGuide}
               />
               <SkillsSection
                 data={profileData.skills}
                 isOwnProfile={isOwnProfile}
-                onSectionClick={null}
+                onGuideOpen={openGuide}
               />
               <RecommendationsSection
                 data={profileData.recommendations}
                 isOwnProfile={isOwnProfile}
-                onSectionClick={null}
+                onGuideOpen={openGuide}
               />
               <LanguagesSection
                 data={profileData.languages}
                 isOwnProfile={isOwnProfile}
-                onSectionClick={null}
+                onGuideOpen={openGuide}
               />
               <InterestsSection
                 data={profileData.interests}
                 isOwnProfile={isOwnProfile}
-                onSectionClick={null}
+                onGuideOpen={openGuide}
               />
             </div>
 
             {/* Sidebar column */}
             <div className="profile-sidebar">
-              <ProfileSidebar header={profileData.header} />
+              <ProfileSidebar header={profileData.header} onGuideOpen={openGuide} />
             </div>
           </div>
         </div>
