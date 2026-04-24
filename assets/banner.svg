@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1584" height="396" viewBox="0 0 1584 396">
+  <defs>
+    <linearGradient id="bannerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a66c2;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#057642;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a66c2;stop-opacity:1" />
+    </linearGradient>
+    <!-- Subtle grid pattern -->
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <!-- Background gradient -->
+  <rect width="1584" height="396" fill="url(#bannerGrad)" />
+  <!-- Grid overlay -->
+  <rect width="1584" height="396" fill="url(#grid)" />
+  <!-- Decorative circles -->
+  <circle cx="200" cy="80" r="180" fill="rgba(255,255,255,0.04)" />
+  <circle cx="1400" cy="300" r="220" fill="rgba(255,255,255,0.04)" />
+  <circle cx="800" cy="200" r="300" fill="rgba(255,255,255,0.03)" />
+  <!-- Data/analytics themed elements -->
+  <!-- Bar chart silhouette -->
+  <rect x="650" y="240" width="30" height="80" fill="rgba(255,255,255,0.15)" rx="4"/>
+  <rect x="690" y="200" width="30" height="120" fill="rgba(255,255,255,0.18)" rx="4"/>
+  <rect x="730" y="220" width="30" height="100" fill="rgba(255,255,255,0.12)" rx="4"/>
+  <rect x="770" y="180" width="30" height="140" fill="rgba(255,255,255,0.2)" rx="4"/>
+  <rect x="810" y="210" width="30" height="110" fill="rgba(255,255,255,0.14)" rx="4"/>
+  <rect x="850" y="230" width="30" height="90" fill="rgba(255,255,255,0.16)" rx="4"/>
+  <!-- Trend line -->
+  <polyline points="665,280 705,250 745,265 785,220 825,235 865,215" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Data points -->
+  <circle cx="665" cy="280" r="5" fill="rgba(255,255,255,0.8)"/>
+  <circle cx="705" cy="250" r="5" fill="rgba(255,255,255,0.8)"/>
+  <circle cx="745" cy="265" r="5" fill="rgba(255,255,255,0.8)"/>
+  <circle cx="785" cy="220" r="5" fill="rgba(255,255,255,0.8)"/>
+  <circle cx="825" cy="235" r="5" fill="rgba(255,255,255,0.8)"/>
+  <circle cx="865" cy="215" r="5" fill="rgba(255,255,255,0.8)"/>
+  <!-- Tagline text -->
+  <text x="792" y="340" font-family="'Segoe UI', Arial, sans-serif" font-size="22" font-weight="600" fill="rgba(255,255,255,0.7)" text-anchor="middle" letter-spacing="3">DATA · ANALYTICS · INSIGHTS</text>
+</svg>

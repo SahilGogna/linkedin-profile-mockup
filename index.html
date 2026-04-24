@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Priya Nair – LinkedIn Profile</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- React 18 + ReactDOM + Babel Standalone (no build step) -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Profile data -->
+  <script src="profileData.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    /* ════════════════════════════════════════════
+       HELPER COMPONENTS
+    ════════════════════════════════════════════ */
+
+    function InitialsAvatar({ name, initials, color, size = 44, shape = 'square' }) {
+      const letters = initials || (name || '').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+      const fontSize = size * 0.36;
+      return (
+        <div
+          className={`initials-avatar ${shape === 'circle' ? 'rounded' : 'square'}`}
+          style={{ width: size, height: size, background: color, fontSize }}
+        >
+          {letters}
+        </div>
+      );
+    }
+
+    function ShowMoreText({ text, limit = 220 }) {
+      const [expanded, setExpanded] = useState(false);
+      const isLong = text.length > limit;
+      const displayed = expanded ? text : text.slice(0, limit);
+      return (
+        <div>
+          <p className="about-text">
+            {displayed}{!expanded && isLong && '…'}
+          </p>
+          {isLong && (
+            <button className="show-more-btn" onClick={() => setExpanded(!expanded)}>
+              {expanded ? 'see less' : '…see more'}
+            </button>
+          )}
+        </div>
+      );
+    }
+
+    function SectionHeaderRow({ title, isOwnProfile }) {
+      return (
+        <div className="section-header-row">
+          <h2 className="section-title">{title}</h2>
+          {isOwnProfile && <button className="icon-btn" title="Edit">✏️</button>}
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       PROFILE HEADER
+    ════════════════════════════════════════════ */
+
+    function ProfileHeader({ data, isOwnProfile }) {
+      return (
+        <div className="profile-header-card">
+          {/* Banner */}
+          <div className="banner-container">
+            <img
+              className="banner-img"
+              src={data.banner}
+              alt="Profile banner"
+              onError={e => { e.target.style.display = 'none'; }}
+            />
+            {isOwnProfile && <button className="banner-edit-btn" title="Edit banner">✏️</button>}
+          </div>
+
+          <div className="profile-header-body">
+            {/* Avatar */}
+            <div className="avatar-wrapper">
+              <div className={`avatar-ring ${data.openToWork ? 'open-to-work' : ''}`}>
+                <div className="avatar-circle" style={{ background: '#0a66c2' }}>
+                  <img
+                    src={data.avatar}
+                    alt={data.name}
+                    onError={e => { e.target.style.display = 'none'; e.target.parentNode.innerHTML = '<span style="font-size:42px;font-weight:700;color:#fff">PN</span>'; }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Name + pronouns + degree */}
+            <div className="profile-name-row">
+              <span className="profile-name">{data.name}</span>
+              <span className="profile-pronouns">({data.pronouns})</span>
+              <span className="degree-badge">{data.degree}</span>
+            </div>
+
+            {/* Headline */}
+            <p className="profile-headline">{data.headline}</p>
+
+            {/* Location */}
+            <p className="profile-location">
+              {data.location} · <span className="profile-contact-link">{data.contactInfo}</span>
+            </p>
+
+            {/* Stats */}
+            <div className="profile-stats">
+              <div className="profile-stat">
+                {data.followers.toLocaleString()} <span>followers</span>
+              </div>
+              <div className="profile-stat">
+                {data.connections} <span>connections</span>
+              </div>
+            </div>
+
+            {/* Mutual connections */}
+            {data.mutualConnections && data.mutualConnections.length > 0 && (
+              <div className="mutual-connections">
+                <div className="mutual-avatars">
+                  {data.mutualConnections.map((mc, i) => (
+                    <div key={i} className="mutual-avatar" style={{ background: mc.color }}>
+                      {mc.initials}
+                    </div>
+                  ))}
+                </div>
+                <span>
+                  {data.mutualConnections.map(mc => mc.name).join(' and ')} are mutual connections
+                </span>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="action-buttons">
+              {isOwnProfile ? (
+                <>
+                  <button className="btn btn-green">Open to</button>
+                  <button className="btn btn-outline">Add section</button>
+                  <button className="btn btn-ghost">Enhance profile</button>
+                  <button className="btn btn-ghost">Resources ▾</button>
+                </>
+              ) : (
+                <>
+                  <button className="btn btn-primary">Connect</button>
+                  <button className="btn btn-outline">Message</button>
+                  <button className="btn btn-outline">Follow</button>
+                  <button className="btn btn-ghost">More ▾</button>
+                </>
+              )}
+            </div>
+
+            {/* Current company + school */}
+            <div className="header-sidebar-info">
+              {data.currentCompany && (
+                <div className="sidebar-info-row">
+                  <InitialsAvatar
+                    initials={data.currentCompany.initials}
+                    color={data.currentCompany.color}
+                    size={22}
+                    shape="square"
+                  />
+                  <span className="info-label">{data.currentCompany.name}</span>
+                </div>
+              )}
+              {data.currentSchool && (
+                <div className="sidebar-info-row">
+                  <InitialsAvatar
+                    initials={data.currentSchool.initials}
+                    color={data.currentSchool.color}
+                    size={22}
+                    shape="square"
+                  />
+                  <span className="info-label">{data.currentSchool.name}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       ABOUT SECTION
+    ════════════════════════════════════════════ */
+
+    function AboutSection({ data, isOwnProfile, onSectionClick }) {
+      const [expanded, setExpanded] = useState(false);
+      const paragraphs = data.text.trim().split('\n\n');
+      const previewText = paragraphs[0];
+      const hasMore = paragraphs.length > 1;
+
+      return (
+        <div className="card">
+          <div className="card-body">
+            <SectionHeaderRow title="About" isOwnProfile={isOwnProfile} />
+
+            {expanded ? (
+              <div className="about-text">
+                {paragraphs.map((p, i) => (
+                  <p key={i} style={{ marginBottom: i < paragraphs.length - 1 ? '12px' : 0 }}>{p}</p>
+                ))}
+              </div>
+            ) : (
+              <p className="about-text">{previewText}{hasMore ? '…' : ''}</p>
+            )}
+
+            {hasMore && (
+              <button className="show-more-btn" onClick={() => setExpanded(!expanded)}>
+                {expanded ? 'see less' : '…see more'}
+              </button>
+            )}
+
+            {/* Top Skills sub-card */}
+            <div className="top-skills-card">
+              <div className="top-skills-inner">
+                <div className="top-skills-title">🔑 Top skills</div>
+                <div className="top-skills-list">{data.topSkills.join(' · ')}</div>
+              </div>
+              <div className="top-skills-arrow">›</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       FEATURED SECTION
+    ════════════════════════════════════════════ */
+
+    function FeaturedSection({ data, isOwnProfile, onSectionClick }) {
+      return (
+        <div className="card">
+          <div className="card-body">
+            <SectionHeaderRow title="Featured" isOwnProfile={isOwnProfile} />
+            <div className="featured-scroll">
+              {data.map((item, i) => (
+                <div key={i} className="featured-card" onClick={() => window.open(item.url, '_blank')}>
+                  <div className="featured-thumb">{item.icon}</div>
+                  <div className="featured-meta">
+                    <div className="featured-type">{item.type}</div>
+                    <div className="featured-title">{item.title}</div>
+                    <div className="featured-subtitle">{item.subtitle}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       EXPERIENCE SECTION
+    ════════════════════════════════════════════ */
+
+    function ExperienceSection({ data, isOwnProfile, onSectionClick }) {
+      return (
+        <div className="card">
+          <div className="card-body">
+            <SectionHeaderRow title="Experience" isOwnProfile={isOwnProfile} />
+            <div className="experience-list">
+              {data.map((exp, i) => (
+                <div key={i} className="experience-item">
+                  <div className="experience-logo">
+                    <InitialsAvatar initials={exp.initials} color={exp.color} size={48} shape="square" />
+                  </div>
+                  <div>
+                    <div className="exp-title">{exp.title}</div>
+                    <div className="exp-company">{exp.company} · {exp.type}</div>
+                    <div className="exp-meta">
+                      {exp.start} – {exp.end} · {exp.duration}<br />
+                      {exp.location}
+                    </div>
+                    <ul className="exp-bullets">
+                      {exp.bullets.map((b, j) => (
+                        <li key={j}>{b}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="section-footer">
+              <button className="section-footer-btn">Show all experience →</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       EDUCATION SECTION
+    ════════════════════════════════════════════ */
+
+    function EducationSection({ data, isOwnProfile, onSectionClick }) {
+      return (
+        <div className="card">
+          <div className="card-body">
+            <SectionHeaderRow title="Education" isOwnProfile={isOwnProfile} />
+            <div className="education-list">
+              {data.map((edu, i) => (
+                <div key={i} className="education-item">
+                  <InitialsAvatar initials={edu.initials} color={edu.color} size={48} shape="square" />
+                  <div>
+                    <div className="edu-school">{edu.school}</div>
+                    <div className="edu-degree">{edu.degree}, {edu.field}</div>
+                    <div className="edu-meta">{edu.start} – {edu.end}</div>
+                    {edu.gpa && (
+                      <div className="edu-detail">
+                        <strong>Grade:</strong> {edu.gpa} · {edu.honours}
+                      </div>
+                    )}
+                    {edu.coursework && edu.coursework.length > 0 && (
+                      <div className="edu-detail">
+                        <strong>Relevant coursework:</strong> {edu.coursework.join(', ')}
+                      </div>
+                    )}
+                    {edu.activities && (
+                      <div className="edu-detail mt-4">
+                        <strong>Activities:</strong> {edu.activities}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       CERTIFICATIONS SECTION
+    ════════════════════════════════════════════ */
+
+    function CertificationsSection({ data, isOwnProfile, onSectionClick }) {
+      return (
+        <div className="card">
+          <div className="card-body">
+            <SectionHeaderRow title="Licenses & Certifications" isOwnProfile={isOwnProfile} />
+            <div className="cert-list">
+              {data.map((cert, i) => (
+                <div key={i} className="cert-item">
+                  <InitialsAvatar initials={cert.initials} color={cert.color} size={48} shape="square" />
+                  <div>
+                    <div className="cert-name">{cert.name}</div>
+                    <div className="cert-issuer">{cert.issuer}</div>
+                    <div className="cert-meta">
+                      Issued {cert.issueDate} · Credential ID: {cert.credentialId}
+                    </div>
+                    <button
+                      className="btn-credential"
+                      onClick={() => window.open(cert.credentialUrl, '_blank')}
+                    >
+                      🔗 Show credential
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       PROJECTS SECTION
+    ════════════════════════════════════════════ */
+
+    function ProjectItem({ project }) {
+      const [expanded, setExpanded] = useState(false);
+      const limit = 160;
+      const isLong = project.description.length > limit;
+      return (
+        <div className="project-item">
+          <div className="project-title">{project.title}</div>
+          <div className="project-dates">{project.start} – {project.end}</div>
+          <div className="project-associated">
+            <InitialsAvatar
+              initials={project.associatedInitials}
+              color={project.associatedColor}
+              size={24}
+              shape="circle"
+            />
+            <span>Associated with {project.associatedWith}</span>
+          </div>
+          <button
+            className="btn-show-project"
+            onClick={() => window.open(project.url, '_blank')}
+          >
+            Show project ↗
+          </button>
+          <p className="project-description">
+            {expanded ? project.description : project.description.slice(0, limit) + (isLong ? '…' : '')}
+          </p>
+          {isLong && (
+            <button className="show-more-btn" onClick={() => setExpanded(!expanded)}>
+              {expanded ? 'see less' : '…see more'}
+            </button>
+          )}
+          {project.contributors.length > 0 && (
+            <div style={{ marginTop: '10px' }}>
+              <div className="project-contributors-label">Other contributors</div>
+              <div className="project-contributor-avatars">
+                {project.contributors.map((c, j) => (
+                  <div key={j} className="contributor-avatar" style={{ background: c.color }}>
+                    {c.initials}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    function ProjectsSection({ data, isOwnProfile, onSectionClick }) {
+      return (
+        <div className="card">
+          <div className="card-body">
+            <div className="section-header-row">
+              <h2 className="section-title">Projects</h2>
+              {isOwnProfile && (
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <button className="icon-btn" title="Add">＋</button>
+                  <button className="icon-btn" title="Edit">✏️</button>
+                </div>
+              )}
+            </div>
+            <div className="project-list">
+              {data.map((project, i) => (
+                <ProjectItem key={i} project={project} />
+              ))}
+            </div>
+            <div className="section-footer">
+              <button className="section-footer-btn">Show all projects →</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       VOLUNTEERING SECTION
+    ════════════════════════════════════════════ */
+
+    function VolunteeringSection({ data, isOwnProfile, onSectionClick }) {
+      return (
+        <div className="card">
+          <div className="card-body">
+            <SectionHeaderRow title="Volunteering" isOwnProfile={isOwnProfile} />
+            <div className="vol-list">
+              {data.map((vol, i) => (
+                <div key={i} className="vol-item">
+                  <InitialsAvatar initials={vol.initials} color={vol.color} size={48} shape="square" />
+                  <div>
+                    <div className="vol-role">{vol.role}</div>
+                    <div className="vol-org">{vol.org}</div>
+                    <div className="vol-meta">
+                      {vol.start} – {vol.end}{vol.duration ? ` · ${vol.duration}` : ''}
+                    </div>
+                    <span className="vol-cause">{vol.cause}</span>
+                    <p className="vol-description">{vol.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="section-footer">
+              <button className="section-footer-btn">Show all volunteering →</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       SKILLS SECTION
+    ════════════════════════════════════════════ */
+
+    function SkillsSection({ data, isOwnProfile, onSectionClick }) {
+      const [showAll, setShowAll] = useState(false);
+
+      const categories = [...new Set(data.map(s => s.category))];
+      const pinnedSkills = data.filter(s => s.pinned);
+      const allSkills = data;
+      const visibleSkills = showAll ? allSkills : pinnedSkills;
+
+      const grouped = categories.reduce((acc, cat) => {
+        const skills = visibleSkills.filter(s => s.category === cat);
+        if (skills.length > 0) acc[cat] = skills;
+        return acc;
+      }, {});
+
+      return (
+        <div className="card">
+          <div className="card-body">
+            <SectionHeaderRow title="Skills" isOwnProfile={isOwnProfile} />
+            {Object.entries(grouped).map(([cat, skills]) => (
+              <div key={cat} className="skills-category">
+                <div className="skills-category-title">{cat}</div>
+                {skills.map((skill, i) => (
+                  <div key={i} className="skill-item">
+                    <div className="skill-left">
+                      <span className="skill-name">{skill.name}</span>
+                      {skill.verified && <span className="verified-badge">✓ Verified</span>}
+                    </div>
+                    <span className="endorsement-count">
+                      {skill.endorsements} endorsements
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
+            <div className="section-footer">
+              <button className="section-footer-btn" onClick={() => setShowAll(!showAll)}>
+                {showAll ? 'Show less' : `Show all ${data.length} skills →`}
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       RECOMMENDATIONS SECTION
+    ════════════════════════════════════════════ */
+
+    function RecommendationCard({ rec }) {
+      const [expanded, setExpanded] = useState(false);
+      const limit = 240;
+      const isLong = rec.text.length > limit;
+      return (
+        <div className="rec-item">
+          <div className="rec-header">
+            <InitialsAvatar initials={rec.initials} color={rec.color} size={48} shape="circle" />
+            <div className="rec-author-info">
+              <div className="rec-author-name">{rec.author}</div>
+              <div className="rec-author-title">{rec.title}</div>
+            </div>
+          </div>
+          <div className="rec-date">{rec.date} · {rec.relationship}</div>
+          <p className="rec-text">
+            {expanded ? rec.text : rec.text.slice(0, limit) + (isLong ? '…' : '')}
+          </p>
+          {isLong && (
+            <button className="show-more-btn" onClick={() => setExpanded(!expanded)}>
+              {expanded ? 'see less' : '…see more'}
+            </button>
+          )}
+        </div>
+      );
+    }
+
+    function RecommendationsSection({ data, isOwnProfile, onSectionClick }) {
+      const [activeTab, setActiveTab] = useState('received');
+      const list = activeTab === 'received' ? data.received : data.given;
+
+      return (
+        <div className="card">
+          <div className="card-body">
+            <SectionHeaderRow title="Recommendations" isOwnProfile={isOwnProfile} />
+            <div className="rec-tabs">
+              <button
+                className={`rec-tab ${activeTab === 'received' ? 'active' : ''}`}
+                onClick={() => setActiveTab('received')}
+              >
+                Received ({data.received.length})
+              </button>
+              <button
+                className={`rec-tab ${activeTab === 'given' ? 'active' : ''}`}
+                onClick={() => setActiveTab('given')}
+              >
+                Given ({data.given.length})
+              </button>
+            </div>
+            <div className="rec-list">
+              {list.map((rec, i) => (
+                <React.Fragment key={i}>
+                  <RecommendationCard rec={rec} />
+                  {i < list.length - 1 && <div className="rec-divider" />}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       LANGUAGES SECTION
+    ════════════════════════════════════════════ */
+
+    function LanguagesSection({ data, isOwnProfile, onSectionClick }) {
+      return (
+        <div className="card">
+          <div className="card-body">
+            <SectionHeaderRow title="Languages" isOwnProfile={isOwnProfile} />
+            <div className="languages-list">
+              {data.map((lang, i) => (
+                <div key={i} className="language-item">
+                  <span className="language-name">{lang.language}</span>
+                  <span className="language-proficiency">{lang.proficiency}</span>
+                </div>
+              ))}
+            </div>
+            <div className="section-footer">
+              <button className="section-footer-btn">Show all languages →</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       INTERESTS SECTION
+    ════════════════════════════════════════════ */
+
+    function InterestsSection({ data, isOwnProfile, onSectionClick }) {
+      return (
+        <div className="card">
+          <div className="card-body">
+            <SectionHeaderRow title="Interests" isOwnProfile={isOwnProfile} />
+            <div className="interests-tabs">
+              {['Companies','Groups','Newsletters','Schools'].map((tab, i) => (
+                <button key={tab} className={`interests-tab${i === 0 ? ' active' : ''}`}>{tab}</button>
+              ))}
+            </div>
+            <div className="interests-grid">
+              {data.map((item, i) => (
+                <div key={i} className="interest-card">
+                  <InitialsAvatar initials={item.initials} color={item.color} size={48} shape="circle" />
+                  <div className="interest-info">
+                    <div className="interest-name">{item.company}</div>
+                    <div className="interest-followers">{item.followers}</div>
+                    <button className="btn-follow">+ Follow</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="section-footer">
+              <button className="section-footer-btn">Show all interests →</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       SIDEBAR COMPONENTS
+    ════════════════════════════════════════════ */
+
+    function ProfileSidebar({ header }) {
+      return (
+        <>
+          {/* Profile language card */}
+          <div className="sidebar-card">
+            <div className="sidebar-card-title">Profile language</div>
+            <div className="sidebar-row">
+              <span className="sidebar-row-label">English</span>
+            </div>
+          </div>
+
+          {/* Analytics card */}
+          <div className="sidebar-analytics">
+            <div className="analytics-title">Analytics</div>
+            <div className="analytics-desc">Private to you</div>
+            <div className="analytics-row">
+              <span className="analytics-icon">👁️</span>
+              <div>
+                <div className="analytics-num">42</div>
+                <div className="analytics-label">Profile views in last 7 days</div>
+              </div>
+            </div>
+            <div className="analytics-row">
+              <span className="analytics-icon">📈</span>
+              <div>
+                <div className="analytics-num">127</div>
+                <div className="analytics-label">Post impressions in last 30 days</div>
+              </div>
+            </div>
+            <div className="analytics-row">
+              <span className="analytics-icon">🔍</span>
+              <div>
+                <div className="analytics-num">18</div>
+                <div className="analytics-label">Search appearances this week</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Open to work card */}
+          <div className="sidebar-card" style={{ borderLeft: '4px solid #057642' }}>
+            <div className="analytics-title" style={{ color: '#057642' }}>Open to Work</div>
+            <div className="analytics-desc">
+              Data Analyst, Business Analyst, Junior BI Developer roles<br />
+              <strong>Mississauga, ON · Remote · Hybrid</strong>
+            </div>
+            <button className="btn btn-outline" style={{ marginTop: '8px', fontSize: '13px', padding: '4px 14px' }}>
+              Show details
+            </button>
+          </div>
+        </>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       APP ROOT
+    ════════════════════════════════════════════ */
+
+    function App() {
+      const isOwnProfile = profileData.header.isOwnProfile;
+
+      return (
+        <div className="linkedin-app">
+          {/* Full-width profile header */}
+          <ProfileHeader data={profileData.header} isOwnProfile={isOwnProfile} />
+
+          {/* Two-column layout */}
+          <div className="profile-layout">
+            {/* Main column */}
+            <div className="profile-main">
+              <AboutSection
+                data={profileData.about}
+                isOwnProfile={isOwnProfile}
+                onSectionClick={null}
+              />
+              <FeaturedSection
+                data={profileData.featured}
+                isOwnProfile={isOwnProfile}
+                onSectionClick={null}
+              />
+              <ExperienceSection
+                data={profileData.experience}
+                isOwnProfile={isOwnProfile}
+                onSectionClick={null}
+              />
+              <EducationSection
+                data={profileData.education}
+                isOwnProfile={isOwnProfile}
+                onSectionClick={null}
+              />
+              <CertificationsSection
+                data={profileData.certifications}
+                isOwnProfile={isOwnProfile}
+                onSectionClick={null}
+              />
+              <ProjectsSection
+                data={profileData.projects}
+                isOwnProfile={isOwnProfile}
+                onSectionClick={null}
+              />
+              <VolunteeringSection
+                data={profileData.volunteering}
+                isOwnProfile={isOwnProfile}
+                onSectionClick={null}
+              />
+              <SkillsSection
+                data={profileData.skills}
+                isOwnProfile={isOwnProfile}
+                onSectionClick={null}
+              />
+              <RecommendationsSection
+                data={profileData.recommendations}
+                isOwnProfile={isOwnProfile}
+                onSectionClick={null}
+              />
+              <LanguagesSection
+                data={profileData.languages}
+                isOwnProfile={isOwnProfile}
+                onSectionClick={null}
+              />
+              <InterestsSection
+                data={profileData.interests}
+                isOwnProfile={isOwnProfile}
+                onSectionClick={null}
+              />
+            </div>
+
+            {/* Sidebar column */}
+            <div className="profile-sidebar">
+              <ProfileSidebar header={profileData.header} />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
+       RENDER
+    ════════════════════════════════════════════ */
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

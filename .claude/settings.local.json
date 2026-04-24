@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(screencapture -x -t png /tmp/linkedin-preview.png)",
+      "Bash(echo \"exit: $?\")"
+    ]
+  }
+}
