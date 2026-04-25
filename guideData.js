@@ -91,7 +91,7 @@ const guideData = {
     blocks: [
       { type: "text", text: "Profiles with professional photos get up to 21× more profile views and 9× more connection requests. Your photo is your first impression." },
 
-      { type: "heading", text: "DO ✅" },
+      { type: "heading", text: "DO" },
       { type: "do-list", items: [
         "Use a high-resolution headshot (400 × 400 pixels minimum)",
         "Face should take up 60% of the frame",
@@ -102,7 +102,7 @@ const guideData = {
         "Keep it recent (within the last 2 years)"
       ]},
 
-      { type: "heading", text: "DON'T ❌" },
+      { type: "heading", text: "DON'T" },
       { type: "dont-list", items: [
         "Use group photos or cropped-out images",
         "Include sunglasses, hats, or heavy filters",
@@ -159,7 +159,7 @@ Style: Corporate photography, high-quality professional headshot` },
     blocks: [
       { type: "text", text: "Your headline appears everywhere on LinkedIn — search results, connection requests, comments, and posts. It's arguably the most important line on your profile." },
 
-      { type: "heading", text: "DO ✅" },
+      { type: "heading", text: "DO" },
       { type: "do-list", items: [
         "Be clear about who you are or what you aspire to be",
         "Use keywords recruiters search for (SQL, Python, Data Analyst, Marketing, etc.)",
@@ -168,7 +168,7 @@ Style: Corporate photography, high-quality professional headshot` },
         "Update it as your career evolves"
       ]},
 
-      { type: "heading", text: "DON'T ❌" },
+      { type: "heading", text: "DON'T" },
       { type: "dont-list", items: [
         "Just write your job title (e.g., \"Software Engineer\")",
         "Use vague descriptions (\"Passionate professional\")",
@@ -263,18 +263,18 @@ Style: Corporate photography, high-quality professional headshot` },
       { type: "heading", text: "Option 1: Share with All LinkedIn Members" },
       { type: "text", text: "Adds a green \"Open to Work\" ring around your profile picture, visible to everyone." },
       { type: "bullet-list", items: [
-        "✅ More visibility — anyone browsing your profile can see it",
-        "✅ Signals active intent to recruiters and connections",
-        "⚠️ Your current employer might see it",
-        "⚠️ Can come across as desperate to some recruiters"
+        "More visibility — anyone browsing your profile can see it",
+        "Signals active intent to recruiters and connections",
+        "Caution: Your current employer might see it",
+        "Caution: Can come across as desperate to some recruiters"
       ]},
 
       { type: "heading", text: "Option 2: Share with Recruiters Only" },
       { type: "text", text: "Hidden from the public. Only LinkedIn Recruiter users can see your status." },
       { type: "bullet-list", items: [
-        "✅ Discreet — safe if you're currently employed",
-        "✅ Reaches recruiters directly through their search filters",
-        "⚠️ Lower overall visibility compared to public option"
+        "Discreet — safe if you're currently employed",
+        "Reaches recruiters directly through their search filters",
+        "Caution: Lower overall visibility compared to public option"
       ]},
 
       { type: "heading", text: "Our Recommendation" },
@@ -356,7 +356,7 @@ Style: Corporate photography, high-quality professional headshot` },
       { type: "subheading", text: "Paragraph 4 — Call to Action" },
       { type: "bullet-list", items: ["How people can connect with you", "What opportunities you're open to", "Contact information or next steps"] },
 
-      { type: "heading", text: "Writing Tips ✅" },
+      { type: "heading", text: "Writing Tips" },
       { type: "do-list", items: [
         "Write in first person (\"I\" not \"John is...\")",
         "Use short paragraphs (2–3 sentences max)",
@@ -367,7 +367,7 @@ Style: Corporate photography, high-quality professional headshot` },
         "NO emojis — keep it professional"
       ]},
 
-      { type: "heading", text: "Avoid ❌" },
+      { type: "heading", text: "Avoid" },
       { type: "dont-list", items: [
         "Generic buzzwords without context (\"passionate,\" \"dedicated,\" \"hardworking\")",
         "Writing your resume in paragraph form",
@@ -417,9 +417,9 @@ Generate the LinkedIn About section now.` },
 Please rewrite with these adjustments.` },
 
       { type: "heading", text: "Before & After Example" },
-      { type: "subheading", text: "❌ Generic (Before)" },
+      { type: "subheading", text: "Generic (Before)" },
       { type: "example-list", items: ["I am a passionate and dedicated marketing professional with experience in digital marketing. I have worked on various campaigns and projects. I am a team player with excellent communication skills. I am looking for new opportunities to grow my career.\n\nProblems: Vague, no specifics, buzzwords, no metrics, generic."] },
-      { type: "subheading", text: "✅ Optimized (After AI + Editing)" },
+      { type: "subheading", text: "Optimized (After AI + Editing)" },
       { type: "example-list", items: ["I'm a Digital Marketing Specialist with 4+ years of experience driving growth for B2B SaaS companies through data-driven campaigns and content strategy. My expertise lies in SEO, Google Ads, email marketing, and automation tools like HubSpot and Marketo.\n\nAt TechCorp, I led campaigns that generated $2M in pipeline revenue and increased organic traffic by 180% YoY. I managed a $500K annual ad budget, achieving a 45% reduction in cost-per-lead. My content strategy resulted in 15+ pieces ranking on page 1 of Google.\n\nWhy it works: specific role, metrics, tools, achievements, personality, clear CTA."] },
 
       { type: "heading", text: "Student / Entry-Level Prompt Variation" },
@@ -529,13 +529,13 @@ Generate the About section now.` },
       { type: "formula", text: "[Action Verb]  +  [What You Did]  +  [How / Tool Used]  +  [Result / Impact]" },
 
       { type: "heading", text: "Good vs. Bad Examples" },
-      { type: "subheading", text: "❌ Weak bullets" },
+      { type: "subheading", text: "Weak bullets" },
       { type: "dont-list", items: [
         "Responsible for data analysis",
         "Managed social media",
         "Worked on projects"
       ]},
-      { type: "subheading", text: "✅ Strong bullets" },
+      { type: "subheading", text: "Strong bullets" },
       { type: "do-list", items: [
         "Analyzed customer behavior data using SQL and Python, identifying trends that increased retention by 15%",
         "Managed Instagram and LinkedIn accounts, growing followers by 200% and engagement by 150% in 6 months",
@@ -695,12 +695,12 @@ Generate the About section now.` },
       { type: "formula", text: "[What you built]  +  [Tools/Tech used]  +  [Problem it solved / Impact]" },
 
       { type: "heading", text: "Strong vs. Weak Project Descriptions" },
-      { type: "subheading", text: "❌ Weak" },
+      { type: "subheading", text: "Weak" },
       { type: "dont-list", items: [
         "Built a sales dashboard for a class project.",
         "Worked on a data analysis project using Python."
       ]},
-      { type: "subheading", text: "✅ Strong" },
+      { type: "subheading", text: "Strong" },
       { type: "do-list", items: [
         "Built an interactive sales performance dashboard using Power BI and SQL for a real retail client, enabling the team to identify top-performing SKUs and reduce reporting time by 70%.",
         "Developed a customer churn prediction model in Python (scikit-learn, pandas) achieving 87% accuracy, trained on 50K+ customer records — presented findings to a panel of 5 industry judges."
