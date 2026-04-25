@@ -1003,6 +1003,153 @@ Best,
 
       { type: "pro-tip", text: "Don't just follow companies passively — engage with their posts (thoughtful comments, not just likes). When you apply, the hiring team may recognize your name from previous interactions. Early, consistent engagement is a low-effort, high-impact visibility strategy." }
     ]
+  },
+
+  /* ═══════════════════════════════════════════════
+     ACTIVITY — POSTS
+  ═══════════════════════════════════════════════ */
+  activityPosts: {
+    title: "Posting on LinkedIn",
+    icon: "✍️",
+    accentColor: "#0a66c2",
+    blocks: [
+      { type: "heading", text: "Why You Should Post" },
+      { type: "text", text: "Every post you publish is a signal to LinkedIn's algorithm that you're an active, engaged member. The algorithm rewards that by pushing your profile to more people — including recruiters who aren't actively searching for you." },
+      { type: "bullet-list", items: [
+        "Posting consistently increases your profile views by 5–10× compared to passive users",
+        "Recruiters browse creator profiles to find candidates before posting jobs publicly",
+        "Your content builds a public track record of your thinking and expertise",
+        "A single post with strong engagement can reach tens of thousands of people in your industry",
+        "It positions you as a practitioner, not just a job seeker — which changes how recruiters perceive you"
+      ]},
+      { type: "pro-tip", text: "You don't need to go viral. Consistent, relevant posts seen by 500 people in your industry are worth more than one viral post seen by 50,000 random accounts." },
+
+      { type: "heading", text: "What to Post" },
+      { type: "subheading", text: "Share what you're learning and building" },
+      { type: "do-list", items: [
+        "A project you just completed — what problem it solved, what you built, what you learned",
+        "A skill you're actively developing — with a concrete example of how you applied it",
+        "A mistake you made and what you'd do differently (authenticity builds trust)",
+        "A resource, tool, or technique that genuinely helped you (SQL tip, Power BI trick, Python shortcut)",
+        "Behind-the-scenes of your job search — what you're learning, what's working",
+        "Your reaction to an industry trend, news story, or tool announcement — with your actual opinion"
+      ]},
+      { type: "dont-list", items: [
+        "Generic motivational quotes with no personal connection",
+        "Reposting others' content without adding your own take or commentary",
+        "Posting only when you need something (a job, a referral, a favour)",
+        "Oversharing personal struggles with no professional angle",
+        "Announcing certifications with just a badge image and no reflection on what you learned"
+      ]},
+
+      { type: "heading", text: "Post Formats That Perform Well" },
+      { type: "bullet-list", items: [
+        "Short text posts (3–5 lines) — quick insight or opinion, easy to read",
+        "Numbered lists — \"5 things I learned from my first co-op\" — skimmable and shareable",
+        "Before/after comparisons — raw data vs. a cleaned dashboard, ugly code vs. refactored",
+        "Image or screenshot of your actual work — a chart, a query, a dashboard screenshot",
+        "Short storytelling format — problem → what I tried → what worked → the lesson"
+      ]},
+
+      { type: "heading", text: "Posting Frequency" },
+      { type: "text", text: "Consistency beats volume. You don't need to post daily — but you should post on a predictable cadence that you can maintain long-term." },
+      { type: "bullet-list", items: [
+        "Ideal for job seekers: 2–3 posts per week",
+        "Minimum to stay visible in the algorithm: 1 post per week",
+        "Maximum before quality drops: 1 post per day",
+        "Consistency over 8–12 weeks builds a compounding follower effect"
+      ]},
+
+      { type: "heading", text: "Best Days & Times to Post" },
+      { type: "subheading", text: "Days" },
+      { type: "do-list", items: [
+        "Tuesday, Wednesday, Thursday — peak professional engagement",
+        "Monday — acceptable, slightly lower reach as people ease into the week"
+      ]},
+      { type: "dont-list", items: [
+        "Saturday and Sunday — engagement drops by 30–50% on weekends",
+        "Friday afternoon — people are mentally checked out"
+      ]},
+      { type: "subheading", text: "Times (all in your local timezone)" },
+      { type: "bullet-list", items: [
+        "7:30 AM – 9:00 AM — professionals check LinkedIn before their workday starts",
+        "12:00 PM – 1:00 PM — lunch break scroll",
+        "5:00 PM – 6:00 PM — end-of-workday check-in",
+        "Avoid late evenings and overnight — your post will be stale by morning"
+      ]},
+      { type: "pro-tip", text: "Post at 7:45 AM on a Tuesday or Wednesday. The first 60–90 minutes of engagement (likes, comments, shares) tells the algorithm how broadly to distribute your post. Starting with a warm audience in the morning maximizes that early signal." }
+    ]
+  },
+
+  /* ═══════════════════════════════════════════════
+     ACTIVITY — COMMENTS
+  ═══════════════════════════════════════════════ */
+  activityComments: {
+    title: "Commenting on LinkedIn",
+    icon: "💬",
+    accentColor: "#057642",
+    blocks: [
+      { type: "heading", text: "Why Comments Matter More Than Likes" },
+      { type: "text", text: "A like takes one second and leaves no impression. A thoughtful comment takes 30 seconds and puts your name and perspective in front of everyone who reads that post — including the author's entire network. Comments are the highest-leverage, lowest-effort visibility tool on LinkedIn." },
+      { type: "bullet-list", items: [
+        "Every comment you write appears in your connections' feeds as an activity item",
+        "Post authors often visit and follow commenters who add value to their posts",
+        "Recruiters read the comment sections of posts in their industry — yours included",
+        "A strong comment can earn you replies, new followers, and direct messages"
+      ]},
+
+      { type: "heading", text: "Comments That Add Zero Value" },
+      { type: "text", text: "These comments waste everyone's time, including yours. They signal that you didn't actually read the post and add no visibility value because the algorithm deprioritises one-word engagement." },
+      { type: "dont-list", items: [
+        "\"Congratulations!\" — says nothing, adds nothing",
+        "\"Well done!\" — same as the above",
+        "\"Insightful!\" — if you found it insightful, say WHY",
+        "\"Great post!\" — every post author knows this is noise",
+        "\"So inspiring!\" — vague and forgettable",
+        "A fire emoji, a clap emoji, or any lone emoji",
+        "\"Thanks for sharing\" — you've said nothing about the content",
+        "\"100%\" or \"Absolutely agree\" — with no explanation of what you agree with"
+      ]},
+
+      { type: "heading", text: "What a Good Comment Looks Like" },
+      { type: "text", text: "A good comment does one or more of these things: adds context, shares your relevant experience, challenges a point respectfully, or asks a genuine follow-up question." },
+      { type: "do-list", items: [
+        "Reference something specific from the post — shows you actually read it",
+        "Share a related experience: \"When I worked on X, I found that Y...\"",
+        "Add a data point, tool, or resource that complements their point",
+        "Respectfully offer a different angle: \"I'd add that... / One nuance here is...\"",
+        "Ask a genuine follow-up question that shows intellectual curiosity"
+      ]},
+
+      { type: "heading", text: "Follow-Up Questions That Start Real Conversations" },
+      { type: "subheading", text: "For projects or case studies" },
+      { type: "example-list", items: [
+        "\"What was the biggest technical challenge you hit while building this, and how did you get past it?\"",
+        "\"How long did it take to get stakeholder buy-in on the final design? That part always trips me up.\"",
+        "\"Did you consider [alternative approach]? I'm curious why you went with [their approach] instead.\""
+      ]},
+      { type: "subheading", text: "For career milestones or job updates" },
+      { type: "example-list", items: [
+        "\"What did the interview process look like for this role? Any prep resources you'd recommend?\"",
+        "\"What's one thing you wish you knew before starting this position?\"",
+        "\"How did you land your first conversation with this team — direct application, referral, or something else?\""
+      ]},
+      { type: "subheading", text: "For opinions or industry takes" },
+      { type: "example-list", items: [
+        "\"I see your point on X — how do you think that changes for companies that don't have [resource/scale]?\"",
+        "\"Have you found this holds true across industries, or is it specific to [their sector]?\"",
+        "\"This matches what I've seen in [your context]. Did you find [specific variable] made a difference?\""
+      ]},
+
+      { type: "heading", text: "The Comment Formula" },
+      { type: "formula", text: "Specific reference from the post + Your related experience or perspective + A genuine question" },
+      { type: "example-list", items: [
+        "\"Your point about DAX calculated columns vs. measures really resonated — I made that exact mistake on my first Power BI project and it tanked my report performance. Did you find any good resources that finally made it click, or was it just trial and error?\"",
+        "\"The 22% drop-off rate you found is striking. When you presented this to the executive team, how did they respond — was there pushback, or were they already aware something was off in the data?\""
+      ]},
+
+      { type: "pro-tip", text: "Spend 10 minutes a day leaving 3 thoughtful comments on posts in your target industry. Done consistently for 4 weeks, this puts your name in front of more decision-makers than most people achieve in a year of passive scrolling." }
+    ]
   }
 
 };

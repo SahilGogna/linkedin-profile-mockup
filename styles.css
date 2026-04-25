@@ -486,6 +486,13 @@ button { font-family: 'Inter', sans-serif; cursor: pointer; }
   gap: 6px;
   flex-wrap: wrap;
   margin-bottom: 16px;
+  align-items: center;
+}
+
+.activity-tab-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .activity-tab {
@@ -1622,4 +1629,265 @@ button { font-family: 'Inter', sans-serif; cursor: pointer; }
   color: #7a5700;
   line-height: 1.6;
   font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE — MOBILE & TABLET
+   Breakpoints:
+     ≤ 768px  → mobile (single column, collapsed sidebar)
+     ≤ 1024px → tablet (single column, sidebar hidden)
+═══════════════════════════════════════════════════ */
+
+/* ── Tablet: ≤ 1024px ── */
+@media (max-width: 1024px) {
+  .linkedin-app {
+    padding: 0 0 32px;
+  }
+
+  /* Collapse to single column — hide sidebar */
+  .profile-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-sidebar {
+    display: none;
+  }
+
+  .banner-container {
+    height: 160px;
+  }
+
+  .activity-posts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .interests-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ── Mobile: ≤ 768px ── */
+@media (max-width: 768px) {
+
+  /* Page */
+  .linkedin-app {
+    padding: 0 0 24px;
+  }
+
+  /* Header card */
+  .banner-container {
+    height: 120px;
+  }
+
+  .profile-header-body {
+    padding: 0 16px 16px;
+  }
+
+  /* Avatar */
+  .avatar-wrapper {
+    margin-top: -44px;
+    margin-bottom: 16px;
+  }
+
+  .avatar-circle {
+    width: 88px;
+    height: 88px;
+  }
+
+  /* Open to Work arc clips to smaller avatar */
+  .avatar-ring.open-to-work::before {
+    inset: -4px;
+    border-width: 3px;
+  }
+
+  .avatar-ring.open-to-work::after {
+    font-size: 7px;
+    padding: 2px 6px;
+    bottom: -8px;
+  }
+
+  /* Name / headline */
+  .profile-name {
+    font-size: 18px;
+  }
+
+  .profile-headline {
+    font-size: 13px;
+  }
+
+  /* Action buttons — wrap naturally, smaller padding */
+  .action-buttons {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .btn {
+    height: 28px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  /* Cards */
+  .card-body {
+    padding: 12px 12px 16px;
+  }
+
+  .section-footer {
+    margin: 8px -12px -16px;
+    padding: 12px;
+  }
+
+  /* Featured — narrow scroll */
+  .featured-card {
+    min-width: 170px;
+    max-width: 190px;
+  }
+
+  /* Experience / Education / Certs / Vol / Projects — tighter logo */
+  .experience-item,
+  .education-item,
+  .cert-item,
+  .vol-item {
+    grid-template-columns: 40px 1fr;
+    gap: 10px;
+  }
+
+  .experience-item .initials-avatar,
+  .education-item .initials-avatar,
+  .cert-item       .initials-avatar,
+  .vol-item        .initials-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 13px !important;
+  }
+
+  /* Projects */
+  .project-associated .initials-avatar {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 8px !important;
+  }
+
+  /* Activity */
+  .activity-posts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-post-image {
+    height: 90px;
+    font-size: 34px;
+  }
+
+  /* Interests */
+  .interests-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Languages stacked naturally — already block, just reduce font */
+  .language-item {
+    padding: 8px 0;
+  }
+
+  /* Recommendations */
+  .rec-tabs {
+    flex-wrap: wrap;
+  }
+
+  /* Skills toggle */
+  .show-all-btn {
+    font-size: 13px;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 16px;
+  }
+
+  /* Profile stats inline */
+  .profile-stats {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+
+  /* Guide drawer — full width on mobile */
+  .guide-drawer {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 16px 16px 0 0 !important;
+    top: auto !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    height: 85vh !important;
+  }
+}
+
+/* ── Small mobile: ≤ 480px ── */
+@media (max-width: 480px) {
+  .banner-container {
+    height: 100px;
+  }
+
+  .profile-header-body {
+    padding: 0 12px 14px;
+  }
+
+  .avatar-circle {
+    width: 76px;
+    height: 76px;
+  }
+
+  .avatar-wrapper {
+    margin-top: -38px;
+  }
+
+  .avatar-ring.open-to-work::after {
+    font-size: 6px;
+    padding: 2px 5px;
+  }
+
+  .profile-name {
+    font-size: 16px;
+  }
+
+  .btn {
+    height: 26px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .activity-tabs {
+    gap: 4px;
+  }
+
+  .activity-tab {
+    height: 26px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  /* Profile layout — no extra side padding */
+  .profile-layout {
+    margin-top: 6px;
+    gap: 6px;
+  }
+
+  .card-body {
+    padding: 10px 10px 14px;
+  }
+
+  .section-footer {
+    margin: 6px -10px -14px;
+    padding: 10px;
+  }
+
+  .featured-card {
+    min-width: 150px;
+    max-width: 165px;
+  }
+
+  .featured-thumb {
+    height: 80px;
+    font-size: 28px;
+  }
 }

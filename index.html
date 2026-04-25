@@ -371,7 +371,7 @@
        ACTIVITY SECTION
     ════════════════════════════════════════════ */
 
-    function ActivitySection({ data, header, isOwnProfile }) {
+    function ActivitySection({ data, header, isOwnProfile, onGuideOpen }) {
       const [activeTab, setActiveTab] = useState('Posts');
       const tabs = ['Posts', 'Comments', 'Videos', 'Images'];
       const authorName  = header.name;
@@ -385,13 +385,20 @@
 
             <div className="activity-tabs">
               {tabs.map(tab => (
-                <button
-                  key={tab}
-                  className={`activity-tab${activeTab === tab ? ' active' : ''}`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab}
-                </button>
+                <div key={tab} className="activity-tab-wrapper">
+                  <button
+                    className={`activity-tab${activeTab === tab ? ' active' : ''}`}
+                    onClick={() => setActiveTab(tab)}
+                  >
+                    {tab}
+                  </button>
+                  {tab === 'Posts' && onGuideOpen && (
+                    <GuideBadge sectionKey="activityPosts" onOpen={onGuideOpen} />
+                  )}
+                  {tab === 'Comments' && onGuideOpen && (
+                    <GuideBadge sectionKey="activityComments" onOpen={onGuideOpen} />
+                  )}
+                </div>
               ))}
             </div>
 
@@ -938,6 +945,7 @@
                 data={profileData.activity}
                 header={profileData.header}
                 isOwnProfile={isOwnProfile}
+                onGuideOpen={openGuide}
               />
               <ExperienceSection
                 data={profileData.experience}
