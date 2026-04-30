@@ -18,7 +18,7 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
 
     /* ════════════════════════════════════════════
        GUIDE BADGE  (the ? circle)
@@ -28,7 +28,13 @@
         <button
           className={`guide-badge ${className}`}
           title="View tips"
-          onClick={e => { e.stopPropagation(); onOpen(sectionKey); }}
+          onClick={e => {
+            e.stopPropagation();
+            const anchor = e.currentTarget.closest('[data-guide-anchor]')
+              || e.currentTarget.closest('.card, .profile-header-card')
+              || e.currentTarget;
+            onOpen(sectionKey, anchor, e.currentTarget);
+          }}
         >
           ?
         </button>
@@ -92,12 +98,115 @@
       }
     }
 
-    function GuideDrawer({ sectionKey, onClose }) {
+    function GuidePopup({ sectionKey, anchorEl, badgeEl, onClose }) {
+      const popupRef = useRef(null);
+
       useEffect(() => {
         const onKey = e => { if (e.key === 'Escape') onClose(); };
         document.addEventListener('keydown', onKey);
         return () => document.removeEventListener('keydown', onKey);
       }, [onClose]);
+
+      useEffect(() => {
+        if (!anchorEl) return;
+        const guide = guideData[sectionKey];
+        if (!guide) return;
+        anchorEl.style.setProperty('--guide-accent', guide.accentColor);
+        anchorEl.classList.add('guide-highlighted');
+        return () => {
+          anchorEl.classList.remove('guide-highlighted');
+          anchorEl.style.removeProperty('--guide-accent');
+        };
+      }, [anchorEl, sectionKey]);
+
+      useEffect(() => {
+        if (!anchorEl || !popupRef.current) return;
+
+        let rafId = null;
+        let timeoutId = null;
+
+        function reposition() {
+          const popup = popupRef.current;
+          if (!popup) return;
+          const rect = anchorEl.getBoundingClientRect();
+          const vpW  = window.innerWidth;
+          const vpH  = window.innerHeight;
+          // Minimum 300px wide so small anchors (avatar, sidebar) don't get a sliver
+          const popW = Math.max(300, Math.min(rect.width, 560));
+          const popH = Math.min(380, popup.scrollHeight || 380);
+
+          // Horizontal: center over anchor, clamped within viewport
+          let left = rect.left + (rect.width - popW) / 2;
+          left = Math.max(16, Math.min(left, vpW - popW - 16));
+
+          // Vertical: prefer below → above → just-below-badge (tall sections)
+          let top   = rect.bottom + 12;
+          let above = false;
+          if (top + popH > vpH - 16) {
+            const aboveTop = rect.top - popH - 12;
+            if (aboveTop >= 8) {
+              top   = aboveTop;
+              above = true;
+            } else {
+              // Section taller than viewport — float popup at top-RIGHT of the section
+              // so the left portion of the section content remains readable
+              above = false;
+              if (badgeEl) {
+                const br = badgeEl.getBoundingClientRect();
+                top = br.bottom + 10;
+              } else {
+                top = rect.top + 60;
+              }
+              // Right-align: popup right edge flush with section right edge
+              left = Math.max(16, Math.min(rect.right - popW - 4, vpW - popW - 16));
+            }
+          }
+          top = Math.max(8, Math.min(top, vpH - popH - 8));
+
+          popup.style.top   = top  + 'px';
+          popup.style.left  = left + 'px';
+          popup.style.width = popW + 'px';
+          popup.classList.toggle('guide-popup--above', above);
+          // Reveal after position is set (eliminates the initial-flash)
+          popup.classList.add('guide-popup--visible');
+
+          if (badgeEl) {
+            const br     = badgeEl.getBoundingClientRect();
+            const caretX = Math.round(br.left + br.width / 2 - left);
+            popup.style.setProperty('--caret-x', caretX + 'px');
+          }
+        }
+
+        // Scroll target: for tall sections (taller than viewport minus popup height),
+        // scroll so the badge sits near the top; otherwise put the section top near the top.
+        const rect         = anchorEl.getBoundingClientRect();
+        const vpH          = window.innerHeight;
+        const popHEstimate = 380;
+        const sectionFits  = rect.height + popHEstimate + 32 < vpH;
+        let scrollDiff;
+        if (!sectionFits && badgeEl) {
+          const br = badgeEl.getBoundingClientRect();
+          scrollDiff = br.top - 56; // put badge ~56px from top
+        } else {
+          const freeBelow = vpH - rect.height - popHEstimate - 32;
+          const idealTop  = Math.max(16, Math.min(80, freeBelow));
+          scrollDiff = rect.top - idealTop;
+        }
+
+        if (Math.abs(scrollDiff) > 30) {
+          window.scrollBy({ top: scrollDiff, behavior: 'smooth' });
+          timeoutId = setTimeout(() => { rafId = requestAnimationFrame(reposition); }, 340);
+        } else {
+          rafId = requestAnimationFrame(reposition);
+        }
+
+        window.addEventListener('resize', reposition);
+        return () => {
+          clearTimeout(timeoutId);
+          cancelAnimationFrame(rafId);
+          window.removeEventListener('resize', reposition);
+        };
+      }, [anchorEl, badgeEl]);
 
       if (!sectionKey) return null;
       const guide = guideData[sectionKey];
@@ -105,14 +214,15 @@
 
       return (
         <>
-          <div className="guide-overlay" onClick={onClose} />
-          <div className="guide-drawer">
-            <div className="guide-drawer-accent" style={{ background: guide.accentColor }} />
-            <div className="guide-drawer-header">
-              <h2 className="guide-drawer-title">{guide.title}</h2>
-              <button className="guide-drawer-close" onClick={onClose}>✕</button>
+          <div className="guide-backdrop" onClick={onClose} />
+          <div className="guide-popup" ref={popupRef} style={{ position: 'fixed', top: '-9999px', left: '-9999px' }}>
+            <div className="guide-popup-caret" />
+            <div className="guide-popup-accent" style={{ background: guide.accentColor }} />
+            <div className="guide-popup-header">
+              <h2 className="guide-popup-title">{guide.title}</h2>
+              <button className="guide-popup-close" onClick={onClose}>✕</button>
             </div>
-            <div className="guide-drawer-body">
+            <div className="guide-popup-body">
               {guide.blocks.map((block, i) => renderBlock(block, i))}
             </div>
           </div>
@@ -174,7 +284,7 @@
       return (
         <div className="profile-header-card">
           {/* Banner — badge floats top-right */}
-          <div className="banner-container">
+          <div className="banner-container" data-guide-anchor>
             <img
               className="banner-img"
               src={data.banner}
@@ -186,7 +296,7 @@
 
           <div className="profile-header-body">
             {/* Avatar — badge floats on corner */}
-            <div className="avatar-wrapper">
+            <div className="avatar-wrapper" data-guide-anchor>
               <div className={`avatar-ring ${data.openToWork ? 'open-to-work' : ''}`}>
                 <div className="avatar-circle" style={{ background: '#0a66c2' }}>
                   <img
@@ -207,13 +317,13 @@
             </div>
 
             {/* Headline + badge inline */}
-            <div className="guide-inline-row" style={{ marginBottom: '4px' }}>
+            <div className="guide-inline-row" data-guide-anchor style={{ marginBottom: '4px' }}>
               <p className="profile-headline" style={{ margin: 0 }}>{data.headline}</p>
               <GuideBadge sectionKey="headline" onOpen={onGuideOpen} />
             </div>
 
             {/* Location + badge inline */}
-            <div className="guide-inline-row" style={{ marginBottom: '4px' }}>
+            <div className="guide-inline-row" data-guide-anchor style={{ marginBottom: '4px' }}>
               <p className="profile-location" style={{ margin: 0 }}>
                 {data.location} · <span className="profile-contact-link">{data.contactInfo}</span>
               </p>
@@ -247,7 +357,7 @@
             )}
 
             {/* Action buttons — OTW badge sits right after the Open to button */}
-            <div className="action-buttons">
+            <div className="action-buttons" data-guide-anchor>
               {isOwnProfile ? (
                 <>
                   <button className="btn btn-green">Open to</button>
@@ -916,13 +1026,13 @@
 
     function App() {
       const isOwnProfile = profileData.header.isOwnProfile;
-      const [activeGuide, setActiveGuide] = useState(null);
-      const openGuide  = key => setActiveGuide(key);
-      const closeGuide = ()  => setActiveGuide(null);
+      const [activeGuide, setActiveGuide] = useState({ key: null, anchorEl: null, badgeEl: null });
+      const openGuide  = (key, anchorEl, badgeEl) => setActiveGuide({ key, anchorEl, badgeEl });
+      const closeGuide = () => setActiveGuide({ key: null, anchorEl: null, badgeEl: null });
 
       return (
         <div className="linkedin-app">
-          <GuideDrawer sectionKey={activeGuide} onClose={closeGuide} />
+          <GuidePopup sectionKey={activeGuide.key} anchorEl={activeGuide.anchorEl} badgeEl={activeGuide.badgeEl} onClose={closeGuide} />
           {/* Full-width profile header */}
           <ProfileHeader data={profileData.header} isOwnProfile={isOwnProfile} onGuideOpen={openGuide} />
 
